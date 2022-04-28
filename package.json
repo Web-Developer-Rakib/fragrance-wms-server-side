@@ -1,0 +1,14 @@
+{
+  "name": "fragrance-wms-server",
+  "version": "1.0.0",
+  "description": "This is a (WMS) project for perfume's inventory management.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rakibul Hasan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}
