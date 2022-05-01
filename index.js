@@ -27,13 +27,13 @@ const run = async () => {
     await client.connect();
     const productCollection = client.db("FragranceWMS").collection("Products");
 
-    // Insert data
+    // Create product
     app.post("/add-product", async (req, res) => {
       const productsData = req.body;
       const result = await productCollection.insertOne(productsData);
       res.send(result);
     });
-    // Read data
+    // Read product
     app.get("/products", async (req, res) => {
       const query = {};
       const cursor = productCollection.find(query);
