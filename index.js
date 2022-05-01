@@ -12,8 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // DB Info
-const uri =
-  "mongodb+srv://Rakib:<password>@cluster0.c95rx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.c95rx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -29,20 +28,21 @@ const run = async () => {
     const productCollection = client.db("FragranceWMS").collection("Products");
 
     // Insert data
-    app.post(
-      ("/products",
-      async (req, res) => {
-        const productsData = req.body;
-        const result = await productCollection.insertOne(productsData);
-        res.send(result);
-      })
-    );
+    app.post("/add-product", async (req, res) => {
+      const productsData = req.body;
+      const result = await productCollection.insertOne(productsData);
+      res.send(result);
+    });
+    // Read data
+    app.get("/products", async (req, res) => {
+      const query = {};
+      const cursor = productCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
   } finally {
-    // Connection
+    // Connection open
   }
 };
 run().catch(console.dir);
-app.get("/", (req, res) => {
-  res.send("Server is runing...");
-});
 app.listen(port, () => console.log("Listning to port", port));
