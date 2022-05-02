@@ -48,18 +48,36 @@ const run = async () => {
       res.send(product);
     });
     // Update product's quantity
-    app.put("/product/:id", async (req, res) => {
+    app.put("/update-quantity/:id", async (req, res) => {
       const id = req.params.id;
-      const updatedProduct = req.body;
+      const updatedQuantityInfo = req.body;
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
-      const updatedQuantity = {
+      const setUpdatedQuantity = {
         $set: {
-          quantity: updatedProduct.calculatedQuantity,
+          quantity: updatedQuantityInfo.calculatedQuantity,
         },
       };
-      await productCollection.updateOne(filter, updatedQuantity, options);
-      res.send(updatedQuantity.$set);
+      await productCollection.updateOne(filter, setUpdatedQuantity, options);
+      res.send(setUpdatedQuantity.$set);
+    });
+    //Update delivery status
+    app.put("/delivered/:id", async (req, res) => {
+      const id = req.params.id;
+      const deliveryInfo = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const setUpdatedDeliveryStatus = {
+        $set: {
+          quantity: deliveryInfo.deliveredOne,
+        },
+      };
+      await productCollection.updateOne(
+        filter,
+        setUpdatedDeliveryStatus,
+        options
+      );
+      res.send(setUpdatedDeliveryStatus.$set);
     });
   } finally {
     // Connection open
