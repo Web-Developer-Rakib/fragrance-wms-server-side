@@ -46,7 +46,20 @@ const run = async () => {
       const query = { _id: ObjectId(id) };
       const product = await productCollection.findOne(query);
       res.send(product);
-      console.log(product);
+    });
+    // Update product's quantity
+    app.put("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedProduct = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedQuantity = {
+        $set: {
+          quantity: updatedProduct.calculatedQuantity,
+        },
+      };
+      await productCollection.updateOne(filter, updatedQuantity, options);
+      res.send(updatedQuantity.$set);
     });
   } finally {
     // Connection open
