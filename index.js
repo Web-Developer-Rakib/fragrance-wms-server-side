@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const jwt = require("jsonwebtoken");
 
 //App and Port
 const app = express();
@@ -26,7 +27,14 @@ const run = async () => {
     //Create connection and Connect client
     await client.connect();
     const productCollection = client.db("FragranceWMS").collection("Products");
-
+    // JWT tocken
+    app.post("/login", async (req, res) => {
+      const user = req.body;
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1d",
+      });
+      res.send({ accessToken });
+    });
     // Create product
     app.post("/add-product", async (req, res) => {
       const productsData = req.body;
